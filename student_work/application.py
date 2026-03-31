@@ -79,6 +79,7 @@ register_page = f"""{base_style}
 <form method="POST">
   <input name="username" placeholder="Username"><br>
   <input name="password" type="password" placeholder="Password"><br>
+  <input name="favoriteFoid" type="favoriteFoid" placeholder="Favorite Foid"><br> 
   <button type="submit">Sign Up</button>
 </form>
 <a href="/">Back to login</a>
@@ -88,8 +89,9 @@ register_page = f"""{base_style}
 
 secret_page = f"""{base_style}
 <div class="card">
-<h2>🎉 Secret Room</h2>
+<h2>🎉 Not So Secret Room</h2>
 <h3>Welcome, {{{{ username }}}}!</h3>
+<h3>I also like { favoriteFoid }
 <p>You got into the secret room!</p>
 <a href="/logout"><button>Logout</button></a>
 </div>
@@ -124,6 +126,7 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        favoriteFoid = request.form["favoriteFoid"]
 
         if not username or not password:
             error = "Fields cannot be empty"
