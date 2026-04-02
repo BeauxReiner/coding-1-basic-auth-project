@@ -15,7 +15,8 @@ def init_db():
     conn.execute("""
         CREATE TABLE IF NOT EXISTS users (
             username TEXT PRIMARY KEY,
-            password TEXT
+            password TEXT,
+            favoriteFoid TEXT
         )
     """)
     conn.commit()
@@ -79,7 +80,7 @@ register_page = f"""{base_style}
 <form method="POST">
   <input name="username" placeholder="Username"><br>
   <input name="password" type="password" placeholder="Password"><br>
-  <input name="favoriteFoid" type="favoriteFoid" placeholder="Favorite Foid"><br> 
+  <input name="favoriteFoid" type="text" placeholder="Favorite Foid"><br> 
   <button type="submit">Sign Up</button>
 </form>
 <a href="/">Back to login</a>
@@ -91,7 +92,7 @@ secret_page = f"""{base_style}
 <div class="card">
 <h2>🎉 Not So Secret Room</h2>
 <h3>Welcome, {{{{ username }}}}!</h3>
-<h3>I also like { favoriteFoid }
+<p><strong>Your Favorite Foid:</strong> {{{{favoriteFoid}}}}</p>
 <p>You got into the secret room!</p>
 <a href="/logout"><button>Logout</button></a>
 </div>
@@ -136,8 +137,8 @@ def register():
                 hashed_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
                 conn.execute(
-                    "INSERT INTO users (username, password) VALUES (?, ?)",
-                    (username, hashed_pw)
+                    "INSERT INTO users (username, password, favoriteFoid) VALUES (?, ?, ?)",
+                    (username, hashed_pw, favoriteFoid)
                 )
                 conn.commit()
                 
@@ -157,7 +158,16 @@ def register():
 def secret():
     if "user" not in session:
         return redirect(url_for("login"))
-    return render_template_string(secret_page, username=session["user"])
+
+    conn = get_db()
+    user = conn.execute(
+        "SELECT favoriteFoid FROM users WHERE username = ?",
+        (session["user"],)
+    ).fetchone()
+    conn.close()
+
+    favoriteFoid = user["favoriteFoid"] if user else ""
+    return render_template_string(secret_page, username=session["user"], favoriteFoid=favoriteFoid)
 
 @app.route("/logout")
 def logout():
