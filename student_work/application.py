@@ -94,10 +94,19 @@ secret_page = f"""{base_style}
 <h3>Welcome, {{{{ username }}}}!</h3>
 <p><strong>Your Favorite Foid:</strong> {{{{favoriteFoid}}}}</p>
 <p>You got into the secret room!</p>
-<a href="/logout"><button>Logout</button></a>
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; margin-bottom: 10 px;">
+        <a href="/test_page"><button>Test Page</button></a>
+        <a href="/logout"><button>Logout</button></a>
+    </div>
 </div>
 """
-
+test_page = f"""{base_style}
+<div class="card">
+<h2>Test Page</h2>
+<p>This is a test page.</p>
+<a href="/"><button>Back to login</button></a>
+</div>
+"""
 # ---------- ROUTES ----------
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -173,6 +182,10 @@ def secret():
 def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
+
+@app.route("/test_page")
+def testPage():
+    return render_template_string(test_page)
 
 # ---------- RUN ----------
 app.run(host="0.0.0.0", port=5000)
