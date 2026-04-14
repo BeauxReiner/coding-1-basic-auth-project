@@ -95,7 +95,7 @@ secret_page = f"""{base_style}
 <p><strong>Your Favorite Foid:</strong> {{{{favoriteFoid}}}}</p>
 <p>You got into the secret room!</p>
     <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; margin-bottom: 10 px;">
-        <a href="/test_page"><button>Test Page</button></a>
+            <a href="/test_page"><button>Test Page</button></a>
         <a href="/logout"><button>Logout</button></a>
     </div>
 </div>
